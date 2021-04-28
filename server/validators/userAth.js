@@ -11,14 +11,30 @@ module.exports.userValidation = (err) => {
     ]
 }
 
+module.exports.userLoginValidation = (err) => {
+    return [
+        check('email').notEmpty().withMessage("Email is required").isEmail().withMessage("Enter a valid email"),
+        check('password').notEmpty().withMessage("Password is required")
+    ]
+}
+
 module.exports.resultsValidator = (req) => {
+
     let messages = []
-    let object = {msg: ''}
+
     if(!validationResult(req).isEmpty()) {
+
       const errors = validationResult(req).array()
+
       for(let i of errors) {
+
             messages.push(i)
+
       }
+
     }
+
     return messages
+    
   }
+
