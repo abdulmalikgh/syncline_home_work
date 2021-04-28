@@ -1,13 +1,20 @@
 {
-  "name": "syncline",
+  "name": "syncline_fullstack_node_vue_test",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "dev": "nodemon ./server/app.js "
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
   },
