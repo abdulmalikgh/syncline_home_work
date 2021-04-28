@@ -2,16 +2,32 @@ const mongoose = require('mongoose')
 
 require('dotenv').config()
 
-const mg_connection = () => {
+class MongooseConnection{
+    constructor(db_url){
+        this.db_url = db_url
+    }
 
-      return  mongoose.connect(process.env.MONGODB_URI,{
-           useNewUrlParser: true, 
-           useUnifiedTopology: true 
-        }, (err) => {
-            if(err) console.log(err)
-            console.log("database connection established")
-        })
-    
+    async connection(){
+       try {
+        await mongoose.connect(
+            this.db_url, 
+            {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false,
+            useCreateIndex: true,
+            autoIndex: true,
+        },
+        (error) => {
+            if(error) return new Error("Failed to connect to Database")
+            console.log('Database connected..')
+        })  
+       } catch (error) {
+           console.log(error)
+       } 
+    }
 }
 
-module.exports = mg_connection
+const db_connection = new  MongooseConnection(process.env.MONGODB_URI)
+
+module.exports = db_connection
