@@ -7,10 +7,13 @@ const { success, error } = require('../helpers/serverResponse')
 const jwt = require('jsonwebtoken')
 
 const genToken = (userID)=> {
+
     return jwt.sign({userID}, process.env.JWT_SECRET, { expiresIn: '1h'})
+
 }
 
 module.exports.createUser = async (req, res) => {
+    
     try {
 
         const errors = resultsValidator(req)
@@ -107,8 +110,6 @@ module.exports.signin = async (req, res) => {
             user: userMessage.data
 
         } , 200)
-
-        console.log(token)
        
         
     } catch (err) {
