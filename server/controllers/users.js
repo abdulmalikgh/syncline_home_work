@@ -11,18 +11,17 @@ const genToken = (userID)=> {
 }
 
 module.exports.createUser = async (req, res) => {
-
-    const errors = resultsValidator(req)
-
-    if (errors.length > 0) {
-        return res.status(400).json({
-        method: req.method,
-        status: res.statusCode,
-        error: errors
-        })
-    }
-
     try {
+
+        const errors = resultsValidator(req)
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+            method: req.method,
+            status: res.statusCode,
+            error: errors
+            })
+        }
         
         const checkUser = await Users.findOne({email : req.body.email})
         
@@ -39,18 +38,18 @@ module.exports.createUser = async (req, res) => {
         }
 
         const createUser = await Users.create(req.body)
-        
+      
         if(createUser) {
 
-            const createdUser = await (await Users.findOne({ email: createUser.email}))
-            
-            const token = genToken(user._id)
+            const createdUser = await Users.findOne({ email: createUser.email})
+          
+            const token = genToken(createdUser._id)
 
             const successData = {
                 
                 token: token,
 
-                message: 'client created',
+                message: 'user created',
 
                 user: createdUser
 
@@ -60,7 +59,7 @@ module.exports.createUser = async (req, res) => {
         }
 
     } catch (err) {
-
+       
         error(res, error = {
 
             success: false,
@@ -76,8 +75,9 @@ module.exports.createUser = async (req, res) => {
 module.exports.signin = async (req, res) => {
 
     try {
+
         const errors = resultsValidator(req)
-        console.log(errors)
+
         if (errors.length > 0) {
             return res.status(400).json({
             method: req.method,
@@ -86,31 +86,107 @@ module.exports.signin = async (req, res) => {
             })
         }
 
-        const loginUser = await Users.login(req.body.email, req.body.password)
-        console.log(loginUser)
-        const token = genToken(loginUser._id)
+        const userMessage = await Users.login(req.body.email, req.body.password)
 
-        if(loginUser) {
+        if(userMessage.success === false) {
 
-            const message = {
-
-                message:'Login success',
-
-                token:token,
-
-                user:loginUser
-
-            }
-
-            success(res, message, 200)
+            return error(res, userMessage, 400)
 
         }
+
+       
+
+        let token = genToken(userMessage.data._id)
+
+        success(res, {
+
+            message:'Login success',
+
+            token:token,
+
+            user: userMessage.data
+
+        } , 200)
+
+        console.log(token)
+       
         
     } catch (err) {
 
-        console.log(err)
-       
+        error(res, error = {
+
+            success: false,
+
+            message: err
+
+        })
+   
     }
 
 }
 
+module.exports.patients = async (req, res) => {
+
+    try {
+
+        const patients = await Users.find({role: "USER" })
+        
+        if(patients) {
+
+            const message = {
+
+                message:'All users',
+
+                users: patients
+
+            } 
+            
+            success(res, message, 200)
+
+        } 
+        
+    } catch (err) {
+
+        error(res, error = {
+
+            success: false,
+
+            message: err
+
+        })
+        
+    }
+}
+
+module.exports.doctors = async (req, res) => {
+
+    try {
+
+        const doctors = await Users.find({role: "DOCTOR" })
+        
+        if(doctors) {
+
+            const message = {
+
+                message:'All users',
+
+                doctors: doctors
+
+            } 
+            
+            success(res, message, 200)
+
+        } 
+        
+    } catch (err) {
+
+        error(res, error = {
+
+            success: false,
+
+            message: err
+
+        })
+        
+    }
+}

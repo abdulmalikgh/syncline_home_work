@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 
 const bcrypt = require('bcrypt')
 
+const { error } = require('../helpers/serverResponse')
+
 const userSchema = mongoose.Schema({
     first_name: {
         type: String,
@@ -30,11 +32,11 @@ const userSchema = mongoose.Schema({
     }
 })
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', async function(next) {
     
-    const password = bcrypt.hashSync(this.password, 10)
+    const hashPassword = await bcrypt.hashSync(this.password, 10)
 
-    this.password = password
+    this.password = hashPassword
 
     next()
 
@@ -42,22 +44,40 @@ userSchema.pre('save', function(next) {
 
 userSchema.statics.login = async function(email, password){
 
-   const user = await this.findOne({ email : email })
+    const user = await this.findOne({ email : email })
+  
+    if(user) {
 
-   if(user) {
+        const comparePassword = bcrypt.compare(user.password, password)
 
-    const auth = bcrypt.compare(user.password, password)
+        if(comparePassword) {
 
-    if(auth) {
+            return {
 
-        return user 
+                success: true,
+
+                data : user
+            }
+        }
+
+        return {
+
+            success: false,
+
+            error: "Incorrect email or password"
+
+        }
+
     }
 
-    throw Error("Incorrect Password")
+    return {
 
-    } 
+        success: false,
 
-    throw Error("Incorrect Email")
+        error: "Incorrect email or password"
+
+    }
+    
 
 }
 
