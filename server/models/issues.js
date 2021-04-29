@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const issusSchema = mongoose.Schema({
 
     userID: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId, 
+        ref:'Users',
         required: true
     },
 
