@@ -7,7 +7,7 @@
                     <h2 class="text-center">Sign Up</h2>
                 </div>
                 <div class="card-body">
-                    <el-form :model="form" :rules="rules" ref="ruleForm"
+                    <el-form :model="form" ref="ruleForm"
                         class="demo-ruleForm">
                         <el-form-item label="First Name" prop="first_name"
                             :rules="{required:true, message:'Please First Name is required', trigger: 'blur'}">
@@ -64,6 +64,7 @@ export default {
     methods: {
 
         submit(formName) {
+
             this.isLoading = true
             this.$refs[formName].validate((valid) => {
             
@@ -71,7 +72,7 @@ export default {
 
                 this.form.role = "USER"
 
-                this.$http.post(`http://localhost:8000/api/user/signin`, this.form)
+                this.$http.post(`http://localhost:8001/api/user/create`, this.form)
                     .then( res => {
                         if(res) {
                             this.isLoading = false
@@ -82,7 +83,8 @@ export default {
                                 h('i', { style: 'color: teal' }, 'VNode')
                             ])
                             });
-                            localStorage.setItem("user", res.data.user)
+                            localStorage.setItem("user", JSON.stringify(res.data.user))
+                            localStorage.setItem("token", JSON.stringify(res.data.token))
                             setTimeout(() => { window.location.replace('dashboard')}, 3000)
                         }
                     }).catch( err => {
@@ -97,7 +99,9 @@ export default {
                     })
 
             } else {
-            
+                
+                this.isLoading = false
+
                 return false;
 
             }
