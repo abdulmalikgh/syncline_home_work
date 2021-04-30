@@ -36,7 +36,7 @@
                             I have an account? <a href="/login">Login</a>
                         </p>
                         <el-form-item>
-                            <el-button style="float: right" type="primary" @click="submit('ruleForm')">Create</el-button>
+                            <el-button :loading="isLoading" style="float: right" type="primary" @click="submit('ruleForm')">Create</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -51,6 +51,7 @@ export default {
     name: 'signup',
     data() {
         return {
+            isLoading : false,
             form: {
                 first_name: '',
                 last_name: '',
@@ -63,11 +64,37 @@ export default {
     methods: {
 
         submit(formName) {
+            this.isLoading = true
             this.$refs[formName].validate((valid) => {
-
+            
             if (valid) {
-                
-                console.log(form)
+
+                this.form.role = "USER"
+
+                this.$http.post(`http://localhost:8000/api/user/signin`, this.form)
+                    .then( res => {
+                        if(res) {
+                            this.isLoading = false
+                            const h = this.$createElement;
+                            this.$message({
+                            message: h('p', null, [
+                                h('span', null, 'Account created successfully'),
+                                h('i', { style: 'color: teal' }, 'VNode')
+                            ])
+                            });
+                            localStorage.setItem("user", res.data.user)
+                            setTimeout(() => { window.location.replace('dashboard')}, 3000)
+                        }
+                    }).catch( err => {
+                        this.isLoading = false
+                        const h = this.$createElement;
+                            this.$message({
+                            message: h('p', null, [
+                                h('span', null, 'An error occured, Try again'),
+                                h('i', { style: 'color: teal' }, 'VNode')
+                            ])
+                            });
+                    })
 
             } else {
             
