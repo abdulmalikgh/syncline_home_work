@@ -32,7 +32,7 @@
                         :rules="{required:true, message:'Please Password is required', trigger: 'blur'}">
                             <el-input v-model="form.password" show-password></el-input>
                         </el-form-item>
-                        <p>
+                        <p class="">
                             I have an account? <a href="/login">Login</a>
                         </p>
                         <el-form-item>
@@ -113,6 +113,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.container-fluid{
+    background-color:#409EFF;
+}
 </style>

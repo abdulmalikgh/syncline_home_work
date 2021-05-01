@@ -10,7 +10,7 @@ router.post('/create', userValidation() ,createUser )
 
 router.post('/signin', userLoginValidation(), signin )
 
-router.get('/all', patients)
+router.get('/patients', patients)
 
 router.get('/doctors', doctors)
 
