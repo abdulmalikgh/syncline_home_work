@@ -18,10 +18,10 @@ module.exports.create = async (req, res) => {
             })
         }
 
-        const issue = Issues.create(req.body)
-
+        const issue = await Issues.create(req.body)
+        console.log('created issue', issue)
         if(issue) {
-
+            
             success(res, {
                 message:'issue created',
                 issue: issue

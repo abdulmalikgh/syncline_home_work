@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 
 const genToken = (userID)=> {
 
-    return jwt.sign({userID}, process.env.JWT_SECRET, { expiresIn: '1h'})
+    return jwt.sign({ userID }, process.env.JWT_SECRET, { expiresIn: '12h'})
 
 }
 
@@ -47,7 +47,7 @@ module.exports.createUser = async (req, res) => {
             const createdUser = await Users.findOne({ email: createUser.email})
           
             const token = genToken(createdUser._id)
-
+            
             const successData = {
                 
                 token: token,
@@ -83,9 +83,9 @@ module.exports.signin = async (req, res) => {
 
         if (errors.length > 0) {
             return res.status(400).json({
-            method: req.method,
-            status: res.statusCode,
-            error: errors
+                method: req.method,
+                status: res.statusCode,
+                error: errors
             })
         }
 
@@ -100,12 +100,12 @@ module.exports.signin = async (req, res) => {
        
 
         let token = genToken(userMessage.data._id)
-
+        console.log('token', token, 'secret', process.env.JWT_SECRET)
         success(res, {
 
             message:'Login success',
 
-            token:token,
+            token: token,
 
             user: userMessage.data
 
@@ -136,7 +136,7 @@ module.exports.patients = async (req, res) => {
 
             const message = {
 
-                message:'All users',
+                message:'All patients',
 
                 users: patients
 
@@ -169,7 +169,7 @@ module.exports.doctors = async (req, res) => {
 
             const message = {
 
-                message:'All users',
+                message:'All docotrs',
 
                 doctors: doctors
 

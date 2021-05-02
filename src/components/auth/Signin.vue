@@ -63,7 +63,7 @@ export default {
                             const h = this.$createElement;
                             this.$message({
                             message: h('p', null, [
-                                h('span', null, 'Account created successfully'),
+                                h('span', null, 'Login successfully'),
                                 h('i', { style: 'color: teal' }, 'VNode')
                             ])
                             });

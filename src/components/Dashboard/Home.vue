@@ -11,6 +11,46 @@
         </ul>
       </div>
     </div>
+
+    <div class="row justify-content-center main-content">
+      <div class="col-md-12 my-4">
+        <button class="new_issue" data-toggle="modal" data-target="#staticBackdrop"> New Issue </button>
+      </div>
+    </div>
+
+  <!-- modal content -->
+  <div class="modal fade" 
+  id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Report an Issue</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="addIssue">
+          <div class="form-group">
+             <label for="title">Title</label>
+            <input type="text" v-model="form.issueTitle" class="form-control" id="title" placeholder="Enter issue title" required/>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea rows="7" id="description" v-model="form.issueBody" class="form-control" placeholder="Enter issue description" > </textarea>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary submit">  
+              <span v-if="isLoading">Loading..</span>
+              <span v-if="!isLoading">Submit</span>
+          </button>
+      </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
@@ -19,19 +59,48 @@ export default {
   name:'home',
   data() {
     return {
-      user : JSON.parse(localStorage.getItem('user')),
-      token: localStorage.getItem('token')
+      isLoading: false,
+      form: {
+        issueTitle:'',
+        issueBody:'',
+      }
+    }
+  },
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user'))
+    },
+    token(){
+      return JSON.parse(localStorage.getItem('token'))
     }
   },
   methods: {
     logout() {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      window.location.replace('/login')
+      this.$router.push('/login')
+    },
+    addIssue() {
+      
+      this.isLoading = true
+      this.form.userID = this.user._id
+      
+      this.$http.post(`http://localhost:8001/api/issues/create`, this.form,{
+        headers: {
+          'Authorization': `bearer ${this.token}`
+        }
+      }).then( response => {
+        this.isLoading = false
+        console.log(response)
+      }).catch(err => {
+        this.isLoading = false
+        console.log(err)
+      })
+
     }
   }
 }
-</script>
+ </script>
 
 <style scoped>
 .container-fluid{
@@ -69,9 +138,41 @@ ul {
   outline:none;
   background-color:transparent;
   font-size: 1.5em;
+  transition: all 0.5s;
 }
-.logout:hover{
+.logout:hover, .submit:hover{
   opacity: 0.7;
+}
+.main-content{
+  padding-left: 15%;
+  padding-right:15%;
+  width:100%;
+  margin:0;
+}
+.new_issue{
+  float:right;
+  background-color: #183153;
+  color:#FFD43B;
+  outline:none;
+  border:none;
+  padding:10px 20px;
+  transition: all 0.5s;
+}
+.new_issue:hover{
+  outline:none;
+  border:none;
+  opacity:0.8 ;
+}
+.submit{
+  background-color: #183153;
+  color:#FFD43B;
+  outline:none;
+  border:none;
+  transition: all 0.5s; 
+}
+.modal-header{
+ background-color: #183153;
+ color:#FFD43B;
 }
 @media screen and (max-width:600px) {
   /* .nav{

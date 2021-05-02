@@ -6,40 +6,37 @@ const { error } = require('../helpers/serverResponse')
 
 require('dotenv').config()
 
-const authicateUser = (res, req, next) => {
+const authenticateUser = async (req, res, next) => {
 
-    let bearer = req.headers.authorization 
+    try {
 
-    if(!bearer) {
+        const token = req.headers.authorization
 
-      error(res, "Unauthorized user"  ,401);
+        if(token) {
+            
+            let bearerToken = token.split(" ")[1]
+            console.log('token', token, 'secret', process.env.JWT_SECRET)
+            jwt.verify(bearerToken, process.env.JWT_SECRET, async function(err, decode){
+                
+                if(err) {
+                    error(res, err.message, 401)  
+                } else {
+                    console.log(decode)
+                    let user = await Users.findById(decode.id)
 
-      next()
+                    res.locals.user = user
 
+                    next()
+                }
+            })
+        }
+        
+    } catch (err) {
+        console.log('eroror', err)
+        error(res, err, 401)
+        
     }
 
-    const token = bearer.split(" ")[1]
-
-    jwt.verify(token, process.env.CLIENT_SECRET, async(err, decodedToken) => {
-        console.log(decodedToken)
-        if(err) {
-
-             error(res, "Token expires"  ,404)
-
-             next()
-
-        } else {
-
-            const user = Users.findById(decodedToken)
-            console.log(user)
-
-            res.user = user
-
-            next()
-        }
-
-
-    })
 }
 
-module.exports = authicateUser
+module.exports = authenticateUser
