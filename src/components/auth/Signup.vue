@@ -76,25 +76,20 @@ export default {
                     .then( res => {
                         if(res) {
                             this.isLoading = false
-                            const h = this.$createElement;
+                            
                             this.$message({
-                            message: h('p', null, [
-                                h('span', null, 'Account created successfully'),
-                                h('i', { style: 'color: teal' }, 'VNode')
-                            ])
-                            });
+                                    message: 'Login successfully',
+                                    type: 'success'
+                                });
                             localStorage.setItem("user", JSON.stringify(res.data.user))
                             localStorage.setItem("token", JSON.stringify(res.data.token))
                             setTimeout(() => { window.location.replace('dashboard')}, 3000)
                         }
                     }).catch( err => {
                         this.isLoading = false
-                        const h = this.$createElement;
-                            this.$message({
-                            message: h('p', null, [
-                                h('span', null, 'An error occured, Try again'),
-                                h('i', { style: 'color: teal' }, 'VNode')
-                            ])
+                        this.$message({
+                                message: 'An error occured. Try again',
+                                type: 'error'
                             });
                     })
 

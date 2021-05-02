@@ -91,10 +91,19 @@ export default {
         }
       }).then( response => {
         this.isLoading = false
-        console.log(response)
+       this.$message({
+            message: 'Issue created',
+            type: 'success'
+        });
+        this.form = {
+
+        }
       }).catch(err => {
         this.isLoading = false
-        console.log(err)
+         this.$message({
+              message: 'An error occured. Try again',
+              type: 'error'
+          });
       })
 
     }
