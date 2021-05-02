@@ -134,7 +134,7 @@ module.exports.patients = async (req, res) => {
         
         if(patients) {
 
-            const message = {
+            let message = {
 
                 message:'All patients',
 
@@ -148,7 +148,7 @@ module.exports.patients = async (req, res) => {
         
     } catch (err) {
 
-        error(res, error = {
+        error(res,{
 
             success: false,
 

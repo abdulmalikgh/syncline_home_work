@@ -16,6 +16,24 @@
       <div class="col-md-12 my-4">
         <button class="new_issue" data-toggle="modal" data-target="#staticBackdrop"> New Issue </button>
       </div>
+
+      <div class="col-md-12">
+        <h2>My Issues</h2>
+      </div>
+      <div class="col-md-12 my-3 card" v-if="issues.length < 1">
+          <p class="py-5">No issues available</p>
+      </div>
+      <div class="col-md-12 card my-2" v-for="(issue, key) in issues" :key="key">
+          <div class="col-md-12 my-2">
+             <h3>{{issue.issueTitle}}</h3>
+             <hr>
+            <p>{{issue.issueBody}}</p>
+             <span><strong>Issued on</strong> {{issue.createdAt}}</span>
+             <button class="replies">Replies</button>
+          </div>
+
+      </div>
+
     </div>
 
   <!-- modal content -->
@@ -59,6 +77,7 @@ export default {
   name:'home',
   data() {
     return {
+      issues:[],
       isLoading: false,
       form: {
         issueTitle:'',
@@ -74,11 +93,28 @@ export default {
       return JSON.parse(localStorage.getItem('token'))
     }
   },
+  mounted() {
+    this.getUserIssues()
+  },
   methods: {
     logout() {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       this.$router.push('/login')
+    },
+    getUserIssues() {
+      this.$http.get(`http://localhost:8001/api/issues/${this.user._id}`, {
+         headers: {
+          'Authorization': `bearer ${this.token}`
+        }
+      })
+        .then( response => {
+          console.log(response.data.issues)
+          if(response) {
+            this.issues = response.data.issues
+          }
+        }).catch( err => console.log(err))
+
     },
     addIssue() {
       
@@ -107,7 +143,10 @@ export default {
       })
 
     }
-  }
+  },
+  // created() {
+  //   this.getUserIssues()
+  // }
 }
  </script>
 
@@ -157,6 +196,7 @@ ul {
   padding-right:15%;
   width:100%;
   margin:0;
+  background-color: aliceblue;
 }
 .new_issue{
   float:right;
@@ -182,6 +222,21 @@ ul {
 .modal-header{
  background-color: #183153;
  color:#FFD43B;
+}
+/* card */
+.replies{
+  float:right;
+  outline:none;
+  background-color: #FFD43B;
+  color:#183153;
+  transition: all 0.6s;
+  border: none;
+  padding:5px 10px;
+  font-size: bold;
+}
+.replies:hover{
+  background-color:#183153;
+  color:#fff;
 }
 @media screen and (max-width:600px) {
   /* .nav{

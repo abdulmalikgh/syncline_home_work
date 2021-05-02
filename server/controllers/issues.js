@@ -41,7 +41,7 @@ module.exports.issues = async (req, res) => {
 
     try {
 
-        const issues = Issues.find()
+        const issues = await Issues.find()
 
         if(issues) {
             
@@ -60,18 +60,18 @@ module.exports.issue = async (req, res) => {
 
     try {
         
-        const userIssues = Issues.findById(req.body.id)
+        const userIssues = await Issues.find({userID: req.params.id})
 
         if(!userIssues) {
             
-            return error(res, "User not found", 404)
+             error(res, "User not found", 404)
 
         }
-
-        return success(res, {message: 'user issues', issues: userIssues})
+        console.log(userIssues)
+        success(res, {message: 'user issues', issues: userIssues}, 200)
 
     } catch (err) {
-        
+        console.log(err)
         error(res, err)
     }
 

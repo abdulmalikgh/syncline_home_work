@@ -12,6 +12,6 @@ router.post('/create', authenticate, issueValidator(), create )
 
 router.get('/', issues )
 
-router.get('/:id', authenticate, issue)
+router.get('/:id',authenticate, issue )
 
 module.exports = router

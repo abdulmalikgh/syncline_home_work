@@ -15,24 +15,29 @@ const authenticateUser = async (req, res, next) => {
         if(token) {
             
             let bearerToken = token.split(" ")[1]
-            console.log('token', token, 'secret', process.env.JWT_SECRET)
+
             jwt.verify(bearerToken, process.env.JWT_SECRET, async function(err, decode){
                 
                 if(err) {
+
                     error(res, err.message, 401)  
+
                 } else {
-                    console.log(decode)
+                    
                     let user = await Users.findById(decode.id)
 
-                    res.locals.user = user
+                    req.user = user
 
                     next()
                 }
             })
+        } else {
+
+            error(res, "Unauthorized user", 401)
         }
         
     } catch (err) {
-        console.log('eroror', err)
+    
         error(res, err, 401)
         
     }
