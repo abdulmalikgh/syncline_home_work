@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { create, issue, issues } = require('../controllers/issues')
+const { create, issue, issues, add_reply } = require('../controllers/issues')
 
 const authenticate = require('../middleware/auth')
 
@@ -13,5 +13,7 @@ router.post('/create', authenticate, issueValidator(), create )
 router.get('/', issues )
 
 router.get('/:id',authenticate, issue )
+
+router.put('/:id/reply',authenticate, add_reply )
 
 module.exports = router

@@ -24,22 +24,23 @@ module.exports.create = (req, res) => {
 
 module.exports.repliesToUserReport = (req, res) => {
 
-    try {
-        
-        const replies = Replies.findOne({issueID : req.params.id})
+    // try {
+    //     const id = req.params.id 
 
-        if(!replies) {
+    //     const replies = Replies.find({issueID : id})
+
+    //     if(!replies) {
             
-            return success( res, "Issue not found", 404)
+    //         success( res, "Issue not found", 404)
 
-        }
+    //     }
 
-        return success( res, {message: 'Replies', replies : replies})
+    //     success( res, {message: 'Replies', replies : replies})
 
-    } catch (err) {
+    // } catch (err) {
 
-        error( res, err)
+    //     error( res, err)
         
-    }
+    // }
 }
 

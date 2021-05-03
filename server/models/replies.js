@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 
-const replySchema = require({
+const replySchema = mongoose.Schema({
 
     issueID: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref:'Issues', 
+        type: String,
         required: true,
     },
 
@@ -19,7 +18,8 @@ const replySchema = require({
         required: true
     }
     
-}, {
+},
+ {
     timestamp: true
 })
 

@@ -16,7 +16,18 @@ const issusSchema = mongoose.Schema({
     issueBody: {
         type: String,
         required: true
-    }
+    }, 
+
+    replies: [
+        {
+            replyBy: {
+                type: String
+            },
+            reply: {
+                type: String
+            },
+        }
+    ]
 
 }, 
 {

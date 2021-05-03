@@ -19,7 +19,7 @@ module.exports.create = async (req, res) => {
         }
 
         const issue = await Issues.create(req.body)
-        console.log('created issue', issue)
+
         if(issue) {
             
             success(res, {
@@ -41,11 +41,11 @@ module.exports.issues = async (req, res) => {
 
     try {
 
-        const issues = await Issues.find()
+        const issues = await Issues.find().select('userID issueTitle issueBody createdAt replies c').populate('userID', 'first_name last_name email phone')
 
         if(issues) {
             
-            return success(res, {message:'All issues', issues:issues})
+            return success(res, {message:'All issues', issues:issues}, 200)
         }
         
     } catch (err) {
@@ -67,7 +67,6 @@ module.exports.issue = async (req, res) => {
              error(res, "User not found", 404)
 
         }
-        console.log(userIssues)
         success(res, {message: 'user issues', issues: userIssues}, 200)
 
     } catch (err) {
@@ -75,5 +74,40 @@ module.exports.issue = async (req, res) => {
         error(res, err)
     }
 
+}
+
+module.exports.add_reply = async (req, res) => {
+
+    try {
+
+        const checkID = await Issues.findOne({_id:req.params.id})
+        
+        if(!checkID) {
+
+            success(res, "Issue not found", 404)
+
+            return
+        }
+      
+        const reply = await Issues.findByIdAndUpdate(req.params.id, {
+
+            $push: { replies : {replyBy: req.body.replyBy, reply : req.body.reply}}
+
+        })
+
+       if(reply) {
+
+        const issue = await Issues.findById(req.params.id)
+        console.log(req.params.id)
+        success(res, {message: 'Repy added successfully', issue: issue }, 200)
+
+       }
+        
+        
+    } catch (err) {
+        console.log(err)
+        error(res, err)
+
+    }
 }
 

@@ -23,12 +23,28 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../components/auth/Signin.vue')
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
+    path: '/doctor/login',
+    name: 'doctor',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../components/Dashboard/Home.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../components/auth/doctorLogin.vue')
+  },
+  {
+    path: '/user/dashboard',
+    name: 'user-dashboard',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../components/Dashboard/userDashboard.vue')
+  },
+  {
+    path: '/doctor/dashboard',
+    name: 'doctor-dashboard',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../components/Dashboard/doctorDashbaord.vue')
   },
   {
     path: '/home',

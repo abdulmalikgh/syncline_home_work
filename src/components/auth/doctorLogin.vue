@@ -4,7 +4,7 @@
           <div class="col-md-5 my-5">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">Login</h2>
+                    <h2 class="text-center">Doctor Login</h2>
                 </div>
                 <div class="card-body">
                     <el-form :model="form" ref="ruleForm"
@@ -66,10 +66,10 @@ export default {
                                 type: 'success'
                             });
 
-                            localStorage.setItem("user", JSON.stringify(res.data.user))
-                            localStorage.setItem("token", JSON.stringify(res.data.token))
-                            setTimeout(() => { this.$router.push('/user/dashboard')}, 3000)
-
+                            localStorage.setItem("doctor", JSON.stringify(res.data.user))
+                            localStorage.setItem("d_token", JSON.stringify(res.data.token))
+                           setTimeout(() => { this.$router.push('/doctor/dashboard')}, 3000)
+                           
                         }
                     }).catch( err => {
                         this.isLoading = false

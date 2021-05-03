@@ -1,5 +1,6 @@
 <template>
   <div class="container-fluid">
+
     <div class="row justify-content-center nav">
       <div class="col">
         <ul>
@@ -11,8 +12,17 @@
         </ul>
       </div>
     </div>
+     
+     <div class="row justify-content-center main-content" v-if="loading">
+       <div class="d-flex justify-content-center my-4">
+        <div class="spinner-border my-5" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+     </div>
 
-    <div class="row justify-content-center main-content">
+    <div class="row justify-content-center main-content" v-if="!loading">
+
       <div class="col-md-12 my-4">
         <button class="new_issue" data-toggle="modal" data-target="#staticBackdrop"> New Issue </button>
       </div>
@@ -23,14 +33,15 @@
       <div class="col-md-12 my-3 card" v-if="issues.length < 1">
           <p class="py-5">No issues available</p>
       </div>
+
       <div class="col-md-12 card my-2" v-for="(issue, key) in issues" :key="key">
           <div class="col-md-12 my-2">
              <h3>{{issue.issueTitle}}</h3>
              <hr>
             <p>{{issue.issueBody}}</p>
-             <span><strong>Issued on</strong> {{issue.createdAt}}</span>
+             <!-- <span><strong>Issued on</strong> {{issue.createdAt}}</span> -->
              <button class="replies">Replies</button>
-          </div>
+        </div>
 
       </div>
 
@@ -55,15 +66,15 @@
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea rows="7" id="description" v-model="form.issueBody" class="form-control" placeholder="Enter issue description" > </textarea>
+            <textarea rows="7" required id="description" v-model="form.issueBody" class="form-control" placeholder="Enter issue description" > </textarea>
           </div>
           <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary submit">  
-              <span v-if="isLoading">Loading..</span>
-              <span v-if="!isLoading">Submit</span>
-          </button>
-      </div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary submit">  
+                <span v-if="isLoading">Loading..</span>
+                <span v-if="!isLoading">Submit</span>
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -74,16 +85,22 @@
 
 <script>
 export default {
-  name:'home',
+  name:'doctor-dashboard',
   data() {
+
     return {
+
       issues:[],
       isLoading: false,
+      loading: false,
+
       form: {
         issueTitle:'',
         issueBody:'',
       }
+
     }
+
   },
   computed: {
     user() {
@@ -103,15 +120,22 @@ export default {
       this.$router.push('/login')
     },
     getUserIssues() {
+
+      this.loading = true
+
       this.$http.get(`http://localhost:8001/api/issues/${this.user._id}`, {
          headers: {
           'Authorization': `bearer ${this.token}`
         }
       })
         .then( response => {
-          console.log(response.data.issues)
+          console.log('response', response.data)
           if(response) {
+
             this.issues = response.data.issues
+
+            this.loading = false
+
           }
         }).catch( err => console.log(err))
 
@@ -169,8 +193,8 @@ ul {
   list-style: none;
   align-items: center;
   padding-top:35px;
+  padding-left: 0!important;
 }
-
 .welcome {
   color:#FFD43B;
 }
