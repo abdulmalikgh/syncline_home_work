@@ -1,19 +1,19 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid ">
 
     <div class="row justify-content-center nav">
-      <div class="col">
+      <div class="col ml-0 pl-0 mr-0 pr-0">
         <ul>
           <li><a class="brand" href="/dashboard">H-consort</a></li>
           <li class="welcome">
-            Welcome! {{user.first_name}} {{user.last_name}} 
+           <span class="hide_welcome"> Welcome! {{user.first_name}} {{user.last_name}}</span> 
             <button @click="logout"  class="logout"><i class="fas fa-sign-out-alt "></i></button>
           </li>
         </ul>
       </div>
     </div>
      
-     <div class="row justify-content-center main-content" v-if="loading">
+     <div class="row justify-content-center main-content pb-5" v-if="loading">
        <div class="d-flex justify-content-center my-4">
         <div class="spinner-border my-5" role="status">
           <span class="sr-only">Loading...</span>
@@ -21,26 +21,47 @@
       </div>
      </div>
 
-    <div class="row justify-content-center main-content" v-if="!loading">
+    <div class="row justify-content-center main-content pb-5" v-if="!loading">
 
-      <div class="col-md-12 my-4">
+      <div class="col-md-12 my-4 pr-0 mr-0">
         <button class="new_issue" data-toggle="modal" data-target="#staticBackdrop"> New Issue </button>
       </div>
 
-      <div class="col-md-12">
+      <div class="col-md-12 pb-3 pl-0 ml-0">
         <h2>My Issues</h2>
       </div>
       <div class="col-md-12 my-3 card" v-if="issues.length < 1">
-          <p class="py-5">No issues available</p>
+          <p class="py-5">No issue available</p>
       </div>
 
       <div class="col-md-12 card my-2" v-for="(issue, key) in issues" :key="key">
           <div class="col-md-12 my-2">
-             <h3>{{issue.issueTitle}}</h3>
+             <h3 class="header">{{issue.issueTitle}}</h3>
              <hr>
             <p>{{issue.issueBody}}</p>
              <!-- <span><strong>Issued on</strong> {{issue.createdAt}}</span> -->
-             <button class="replies">Replies</button>
+             <button @click="issue.visible = !issue.visible" v-if="!issue.visible" class="replies">Replies {{`(${issue.replies.length})`}}</button>
+             <button @click="issue.visible = !issue.visible" v-if="issue.visible" class="replies">Hide</button>
+        </div>
+        <div class="col-md-12" v-if="issue.visible" >
+           <div class="row" v-if="issue.replies.length > 0">
+              <div class="col-md-12">
+              <hr>
+              </div>
+              <div class="col-md-12"  v-for="(reply, key) in issue.replies" :key="key">
+                <h3 class="header">Replies</h3>
+                <p>{{ reply.reply }}</p>
+                <p class="text-right"><strong>Replied by: </strong> {{reply.replyBy}}</p>
+            </div>
+            </div >
+            <div class="row" v-else>
+              <div class="col-md-12">
+                <hr>
+              </div>
+              <div class="col-md-12">
+                <p>No replies available</p>
+              </div>
+            </div>
         </div>
 
       </div>
@@ -129,10 +150,10 @@ export default {
         }
       })
         .then( response => {
-          console.log('response', response.data)
+          
           if(response) {
 
-            this.issues = response.data.issues
+            response.data.issues.forEach(issue => this.issues.push({...issue, visible: false}));
 
             this.loading = false
 
@@ -150,6 +171,7 @@ export default {
           'Authorization': `bearer ${this.token}`
         }
       }).then( response => {
+        this.issues.push(response.data.issue)
         this.isLoading = false
        this.$message({
             message: 'Issue created',
@@ -251,21 +273,33 @@ ul {
 .replies{
   float:right;
   outline:none;
-  background-color: #FFD43B;
-  color:#183153;
+  background-color: #183153;
+  color:#FFD43B;
   transition: all 0.6s;
   border: none;
   padding:5px 10px;
   font-size: bold;
 }
 .replies:hover{
-  background-color:#183153;
-  color:#fff;
+  background-color:#FFD43B;
+  color: #183153
 }
-@media screen and (max-width:600px) {
-  /* .nav{
-    padding-right: 2%;
-    padding-left: 2%;
-  } */
+.header{
+  font-size: 1.4em;
+  font-weight: bolder;
+  padding-top:10px;
+}
+
+@media screen and (max-width: 800px) {
+  .nav , .main-content {
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+
+}
+@media screen  and (max-width:600px){
+  .hide_welcome{
+    display: none;
+  }
 }
 </style>

@@ -79,7 +79,7 @@ module.exports.issue = async (req, res) => {
 module.exports.add_reply = async (req, res) => {
 
     try {
-
+      
         const checkID = await Issues.findOne({_id:req.params.id})
         
         if(!checkID) {
@@ -98,7 +98,7 @@ module.exports.add_reply = async (req, res) => {
        if(reply) {
 
         const issue = await Issues.findById(req.params.id)
-        console.log(req.params.id)
+        
         success(res, {message: 'Repy added successfully', issue: issue }, 200)
 
        }

@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row justify-content-center nav">
-      <div class="col">
+      <div class="col ml-0 pl-0 mr-0 pr-0">
         <ul>
           <li><a class="brand" href="/dashboard">H-consort</a></li>
           <li class="welcome">
@@ -20,20 +20,19 @@
       </div>
      </div>
 
-    <div class="row justify-content-center main-content" v-if="!loading">
-      <div class="col-md-12 my-3">
-        <h2>Issues</h2>
+    <div class="row justify-content-center main-content pb-5" v-if="!loading">
+      <div class="col-md-12 my-4 ml-0 pl-0">
+        <h2 class="">Issues</h2>
       </div>
       <div class="col-md-12 my-3 card" v-if="issues.length < 1">
-          <p class="py-5">No issues available</p>
+          <p class="py-5">No issue available</p>
       </div>
       <div class="col-md-12 card my-2" v-for="(issue, key) in issues" :key="key">
           <div class="col-md-12 my-2">
-             <h3>{{issue.issueTitle}}</h3>
+             <h3 class="header">{{issue.issueTitle}}</h3>
              <hr>
             <p>{{issue.issueBody}}</p>
              <span><strong>Reported by</strong> {{issue.userID.first_name}} {{issue.userID.last_name}} {{" "}}</span>
-             <span><strong>Issued on</strong> {{issue.createdAt}}</span>
              <button class="replies"
               data-toggle="modal" data-target="#staticBackdrop"
               @click="getId(issue._id)">Reply</button>
@@ -131,7 +130,7 @@ export default {
       
       this.isLoading = true
 
-      this.form.replydBy = `${this.doctor.first_name} ${this.doctor.last_name} `
+      this.form.replyBy = `${this.doctor.first_name} ${this.doctor.last_name} `
       console.log('form data', this.form)
       this.$http.put(`http://localhost:8001/api/issues/${this.issueID}/reply`, this.form,{
         headers: {
@@ -239,17 +238,23 @@ ul {
 .replies{
   float:right;
   outline:none;
-  background-color: #FFD43B;
-  color:#183153;
+  background-color: #183153;
+  color:#FFD43B;
   transition: all 0.6s;
   border: none;
   padding:5px 10px;
   font-size: bold;
 }
 .replies:hover{
-  background-color:#183153;
-  color:#fff;
+  background-color:#FFD43B;
+  color: #183153
 }
+.header{
+  font-size: 1.4em;
+  font-weight: bolder;
+  padding-top:10px;
+}
+
 @media screen and (max-width:600px) {
   /* .nav{
     padding-right: 2%;
