@@ -168,6 +168,8 @@ export default {
         this.form = {
 
         }
+         setTimeout(() => { window.location.reload() }, 3000)
+        
       }).catch(err => {
         this.isLoading = false
          this.$message({
