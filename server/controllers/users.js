@@ -89,11 +89,11 @@ module.exports.signin = async (req, res) => {
             })
         }
 
-        const userMessage = await Users.login(req.body.email, req.body.password)
+        let userMessage = await Users.login(req.body.email, req.body.password)
 
         if(userMessage.success === false) {
 
-            return error(res, userMessage, 400)
+            error(res, userMessage, 400)
 
         }
 

@@ -47,9 +47,10 @@
            <div class="row" v-if="issue.replies.length > 0">
               <div class="col-md-12">
               <hr>
+              <h3 class="header">Replies</h3>
               </div>
               <div class="col-md-12"  v-for="(reply, key) in issue.replies" :key="key">
-                <h3 class="header">Replies</h3>
+                
                 <p>{{ reply.reply }}</p>
                 <p class="text-right"><strong>Replied by: </strong> {{reply.replyBy}}</p>
             </div>

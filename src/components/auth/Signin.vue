@@ -15,12 +15,12 @@
                             {required:true, message:'Please Email is required', trigger: 'blur'},
                             {type:'email', message:'Enter a valid Email', trigger: 'blur'}
                         ]">
-                            <el-input v-model="form.email"></el-input>
+                            <el-input v-model="form.email" placeholder="me@example.com"></el-input>
                         </el-form-item>
                         <el-form-item label="Password" prop="password"
-                        placeholder="Enter your password"
+                        
                         :rules="{required:true, message:'Please Password is required', trigger: 'blur'}">
-                            <el-input v-model="form.password" show-password></el-input>
+                            <el-input placeholder="xxxxxxx" v-model="form.password" show-password></el-input>
                         </el-form-item>
                         <p>
                             Don't have an account? <a href="/signup">Sign up</a>
@@ -97,7 +97,8 @@ export default {
 
 <style scoped>
 .container-fluid{
-    background-color:#409EFF;
+    /* background-color:#409EFF; */
+    background-color: #183153;
     height: 100vh;
 }
 </style>

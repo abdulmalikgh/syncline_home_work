@@ -5,7 +5,7 @@
         <ul>
           <li><a class="brand" href="/dashboard">H-consort</a></li>
           <li class="welcome">
-            Welcome! {{doctor.first_name}} {{doctor.last_name}} 
+            <span class="hide_welcome">Welcome! {{doctor.first_name}} {{doctor.last_name}} </span>
             <button @click="logout"  class="logout"><i class="fas fa-sign-out-alt "></i></button>
           </li>
         </ul>
@@ -33,10 +33,33 @@
              <hr>
             <p>{{issue.issueBody}}</p>
              <span><strong>Reported by</strong> {{issue.userID.first_name}} {{issue.userID.last_name}} {{" "}}</span>
+             <button class="view_replies" @click="issue.visible = !issue.visible" v-if="!issue.visible"> show {{issue.replies.length}}</button>
+             <button class="view_replies" @click="issue.visible = !issue.visible" v-if="issue.visible">Hide</button>
              <button class="replies"
               data-toggle="modal" data-target="#staticBackdrop"
               @click="getId(issue._id)">Reply</button>
           </div>
+          <div class="col-md-12" v-if="issue.visible" >
+           <div class="row" v-if="issue.replies.length > 0">
+              <div class="col-md-12">
+              <hr>
+              <h3 class="header">Replies</h3>
+              </div>
+              <div class="col-md-12"  v-for="(reply, key) in issue.replies" :key="key">
+                
+                <p>{{ reply.reply }}</p>
+                <p class="text-right"><strong>Replied by: </strong> {{reply.replyBy}}</p>
+            </div>
+            </div >
+            <div class="row" v-else>
+              <div class="col-md-12">
+                <hr>
+              </div>
+              <div class="col-md-12">
+                <p>No replies available</p>
+              </div>
+            </div>
+        </div>
 
       </div>
 
@@ -120,7 +143,7 @@ export default {
 
             this.loading = false
 
-            this.issues = response.data.issues
+            response.data.issues.forEach(issue => this.issues.push({...issue, visible: false}));
 
           }
         }).catch( err => console.log(err))
@@ -254,7 +277,28 @@ ul {
   font-weight: bolder;
   padding-top:10px;
 }
+.view_replies{
+    float:right;
+  outline:none;
+  background-color:#FFD43B;
+  color: #183153;
+   transition: all 0.6s;
+  border: none;
+  padding:5px 10px;
+  font-size: bold;
+}
+@media screen and (max-width: 800px) {
+  .nav , .main-content {
+    padding-left: 8%;
+    padding-right: 8%;
+  }
 
+}
+@media screen  and (max-width:600px){
+  .hide_welcome{
+    display: none;
+  }
+}
 @media screen and (max-width:600px) {
   /* .nav{
     padding-right: 2%;
